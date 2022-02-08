@@ -53,20 +53,25 @@ class NetworkGenerator():
 
         self.network.add_edges_from(self.edges) 
 
-    def remove_nodes_and_edges(self, perc:int) -> None: 
+    def remove_nodes_and_edges(self, percentage:int) -> None: 
         """ Will remove a certain % of the edges from the graph. 
         Isolated nodes will also be deleted afterwards. 
 
         [Args]: 
-        perc (int): percentage of the edges to be removed from the graph 
+        percentage (int): percentage of the edges to be removed from the graph
+        If left empty, the default value is 20
         """ 
-        edges_to_remove = random.sample(self.edges, (int(len(self.edges) * (perc/100)))) 
+        if percentage == None:
+            percentage = 20
+
+        edges_to_remove = random.sample(self.edges, (int(len(self.edges) * (percentage/100)))) 
         self.network.remove_edges_from(edges_to_remove) 
 
         nodes_to_remove = list(nx.isolates(self.network)) 
         self.network.remove_nodes_from(nodes_to_remove) 
 
-    def print_network(self) -> None: 
-        nx.draw(self.network, with_labels=True, font_weight='bold') 
-        plt.show() 
-        plt.clf() 
+    def print_network(self, action:bool) -> None: 
+        if action:
+            nx.draw(self.network, with_labels=True, font_weight='bold') 
+            plt.show() 
+            plt.clf() 

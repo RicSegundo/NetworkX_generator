@@ -1,36 +1,26 @@
-import timeit 
-import copy 
+import argparse
 from networkX_functions import NetworkGenerator
 
-## TO-DO List
-# Add argument parser to generate the network without having to alter the file
+parser = argparse.ArgumentParser(description="Generate a random graph network, if a list of nodes/edges isn't provided")
+parser.add_argument("-n", "--nodes", type=int, default=None,
+                    help="number of nodes to generate")
+parser.add_argument("-e", "--edges", type=int, default=None,
+                    help="number of edges to generate")
+parser.add_argument("-p", "--percentage", type=int, default=None,
+                    help="percentage of edges to remove from the network")
+parser.add_argument("-q", "--quiet", action="store_false", dest="verbose", default=True,
+                    help="if present, the network structure won't be printed to stdout")
 
-# initial parameters, can be passed to the NetworkGenerator object ir not 
-nodes = 100 
-edges = 250 
+# initial parameters, can be passed to the NetworkGenerator object as arguments, otherwise
+# it will run with the predefined values, set in the Class parameters/methods 
 
-G = NetworkGenerator() 
+args = parser.parse_args()
 
-start_time_creation = timeit.default_timer() 
-G.generate_network() 
-#G.print_network() 
-print(timeit.default_timer() - start_time_creation) 
+G = NetworkGenerator(args.nodes, args.edges)
 
-H = copy.deepcopy(G) 
-I = copy.deepcopy(G) 
+G.generate_network()
+G.print_network(args.verbose)
 
-start_time_removal = timeit.default_timer() 
-G.remove_nodes_and_edges(10) 
-#G.print_network() 
-print(timeit.default_timer() - start_time_removal) 
-
-start_time_removal = timeit.default_timer() 
-H.remove_nodes_and_edges(50) 
-#H.print_network() 
-print(timeit.default_timer() - start_time_removal) 
-
-start_time_removal = timeit.default_timer() 
-I.remove_nodes_and_edges(90) 
-#I.print_network() 
-print(timeit.default_timer() - start_time_removal)
+G.remove_nodes_and_edges(args.percentage)
+G.print_network(args.verbose)
 
